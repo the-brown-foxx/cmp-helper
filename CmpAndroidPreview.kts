@@ -44,21 +44,23 @@ registerEditorAction(
 
     val previewFilename = "${originalPath.nameWithoutExtension}Preview.kt"
     val previewFile = File(previewPath.pathString, previewFilename)
-
-    val previewContent = """
-        package ${packagePath.pathString.replace('\\', '.')}
-        
-        import androidx.compose.runtime.Composable
-        import androidx.compose.ui.tooling.preview.Preview
-        
-        @Preview
-        @Composable
-        private fun Preview() {
+    
+    if (!previewFile.exists()) {
+        val previewContent = """
+            package ${packagePath.pathString.replace('\\', '.')}
             
-        }
-    """.trimIndent()
+            import androidx.compose.runtime.Composable
+            import androidx.compose.ui.tooling.preview.Preview
+            
+            @Preview
+            @Composable
+            private fun Preview() {
+                
+            }
+        """.trimIndent()
 
-    previewFile.writeText(previewContent)
+        previewFile.writeText(previewContent)
+    }
 
     VirtualFileManager.getInstance().syncRefresh()
 
